@@ -42,8 +42,6 @@ const useErrors = (errors=[])=>{
 
 const useExistingShapes = (roomId)=>{
     const {isLoading,data,isError,error}=useGetChatDetailsQuery(roomId);
-    console.log(data);
-
     useErrors([{isError,error}]);
 
     const shapes = data?.chats?.map((x)=>{
@@ -63,7 +61,6 @@ const useSocketsEvents = (socket,handlers)=>{
         Object.entries(handlers).forEach(([event,handler])=>{
             socket.on(event,handler);
         })
-
         return ()=>{
             Object.entries(handlers).forEach(([event,handler])=>{
                 socket.off(event,handler);

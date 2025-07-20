@@ -3,6 +3,8 @@ import {createSlice} from '@reduxjs/toolkit'
 const initialState = {
     isAuthTab:false,
     isDrawTab:true,
+    Shapes:[]
+
 }
 
 const miscSlice = createSlice({
@@ -20,6 +22,12 @@ const miscSlice = createSlice({
         },
         setDrawTabClose:(state)=>{
             state.isDrawTab=false
+        },
+        setShapes:(state,action)=>{
+            state.Shapes = action.payload
+        },
+        addShape:(state,action)=>{
+              state.Shapes.push(action.payload)
         }
     }
 })
@@ -30,5 +38,7 @@ export const {
     setAuthTabClose,
     setAuthTabOpen,
     setDrawTabClose,
-    setDrawTabOpen
+    setDrawTabOpen,
+    setShapes,
+    addShape,
 } = miscSlice.actions

@@ -35,15 +35,6 @@ const api = createApi({
             }),
             invalidatesTags:["Room"]
         }),
-        getChatDetails:builder.query({
-            query:(roomId)=>({
-                url:`chat/${roomId}`,
-                method:"GET",
-                credentials:"include",
-            }),
-            invalidatesTags:["Draw"]
-        })
-
     })
 })
 
@@ -53,5 +44,4 @@ export const {
     useUserLoginMutation,
     useRegisterUserMutation,
     useCreateRoomMutation,
-    useGetChatDetailsQuery,
 } = api
