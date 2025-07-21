@@ -2,12 +2,12 @@ import { CHAT } from '../constant/events';
 import { addShape, setShapes } from '../redux/reducers/misc';
 import { getShapesFromDB } from '../utils/getShapesFromDB';
 
-const initDraw= async (canvas,socket,getSelectedTool)=>{
+const initDraw= async (canvas,socket,getSelectedTool,setSelectedTool)=>{
           const roomId = localStorage.getItem("roomId");
           const ctx = canvas.getContext("2d");
 
           if(!ctx) return;
-          ctx.fillStyle = 'rgba(0,0,0)';
+          ctx.fillStyle = 'rgb(18, 18, 18)';
           ctx.fillRect(0,0,canvas.width,canvas.height);
 
           const shapesFromDB =await getShapesFromDB(roomId);
@@ -33,24 +33,23 @@ const initDraw= async (canvas,socket,getSelectedTool)=>{
                let height= e.offsetY-startY;
 
                let newShape = {type:currentTool,x:startX,y:startY,width:width,height:height};
-
-               if(height || width){
+               if(currentTool==="pointer"){
+                    clearCanvas(canvas,ctx);
+                    drawShape(Shapes,canvas,ctx);
+               }else if((height || width)){
                     if(currentTool==="line")
                          newShape = {type:"line",x:startX,y:startY,endX:e.offsetX,endY:e.offsetY};
                     Shapes.push(newShape);
                     drawShape(Shapes,canvas,ctx);
                     socket.emit(CHAT,{roomId,content:newShape});
                }
-
+               setSelectedTool("pointer");
           })
-
           canvas.addEventListener("mousemove",(e)=>{
                 if(clicked){
                     let width = e.offsetX-startX;
                     let height= e.offsetY-startY;
                     
-                    // handleCircle(startX,startY,width,height,ctx,);
-                    // clearCanvas(canvas,ctx);
                     drawShape(Shapes,canvas,ctx)
                     if(currentTool ==="circle"){
                          handleCircle(startX,startY,width,height,ctx);
@@ -59,7 +58,10 @@ const initDraw= async (canvas,socket,getSelectedTool)=>{
                     }else if(currentTool==="rectangle"){
                          ctx.strokeRect(startX,startY,width,height);
                     }else if(currentTool === "pointer"){
-                         ctx.strokeRect(startX,startY,height,width)
+                         ctx.strokeStyle="rgb(75, 54, 158)"
+                         ctx.fillStyle = "rgba(5, 54, 158,0.08)"
+                         ctx.fillRect(startX, startY, width, height);
+                         ctx.strokeRect(startX,startY,width,height);
                     }
                 }
           })
@@ -113,7 +115,7 @@ const handleLine = (startX,startY,endPointX,endPointY,ctx)=>{
 
 const clearCanvas =(canvas,ctx)=>{
      ctx.clearRect(0, 0, canvas.width, canvas.height);
-     ctx.fillStyle = "rgba(0,0,0)";
+     ctx.fillStyle = "rgb(18, 18, 18)";
      ctx.fillRect(0, 0, canvas.width, canvas.height);
 }    
 
