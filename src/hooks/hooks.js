@@ -40,22 +40,6 @@ const useErrors = (errors=[])=>{
 }
 
 
-const useExistingShapes = (roomId)=>{
-    const {isLoading,data,isError,error}=useGetChatDetailsQuery(roomId);
-    useErrors([{isError,error}]);
-
-    const shapes = data?.chats?.map((x)=>{
-        try {
-            return JSON.parse(x.message);
-        } catch (error) {
-            return null;
-        }
-    }).filter(Boolean)|| [];
-
-    return {shapes,isLoading};
-}
-
-
 const useSocketsEvents = (socket,handlers)=>{
     useEffect(()=>{
         Object.entries(handlers).forEach(([event,handler])=>{
@@ -70,4 +54,4 @@ const useSocketsEvents = (socket,handlers)=>{
 }
 
 
-export {useAsyncMutation,useErrors,useExistingShapes,useSocketsEvents}
+export {useAsyncMutation,useErrors,useSocketsEvents}
