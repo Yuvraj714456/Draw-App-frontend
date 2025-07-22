@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import CreateRoomModel from "../component/createRoomModel";
+import CreateRoomModel from "../component/CreateRoomModel";
 import { useAsyncMutation } from "../hooks/hooks";
 import { useGetUserDetailsMutation } from "../redux/api/api";
 import { setCreateRoomDialogOpen } from "../redux/reducers/misc";

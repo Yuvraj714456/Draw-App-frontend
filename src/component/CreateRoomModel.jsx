@@ -5,7 +5,7 @@ import { useAsyncMutation } from '../hooks/hooks';
 import { useCreateRoomMutation } from '../redux/api/api';
 import { setCreateRoomDialogClose, setDrawTabClose, setDrawTabOpen } from '../redux/reducers/misc';
 
-const CreateRoomModel = ({setShowCreateModal}) => {
+const CreateRoomModel = () => {
 
     const [newRoom, setNewRoom] = useState({ name: "", description: "" });
     const navigate = useNavigate();
