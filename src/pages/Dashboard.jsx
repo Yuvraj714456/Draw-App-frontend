@@ -26,7 +26,6 @@ export default function Dashboard() {
       }
   },[data]);
 
-  console.log(userDetails);
   if(roomDetaills){
         filteredRooms = roomDetaills.filter(room =>(
           room.slug?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -46,12 +45,16 @@ export default function Dashboard() {
       }).length ||0;
   }
 
+  const handleLogout =()=>{
+          console.log("logout");
+  }
+
   return !isLoading && userDetails? (
     <div className="min-h-screen flex bg-gray-50">
       <div className="w-80 bg-white border-r border-gray-200 p-6 fixed h-full">
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-6">
-            <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+            <div className="w-12 h-12 bg-indigo-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
               {userDetails.name.charAt(0)}
             </div>
             <div>
@@ -89,6 +92,10 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        <div onClick={handleLogout} className="rounded-md text-white bg-indigo-600 px-4 py-2 text-center text-2xl">
+                    Logout
+        </div>
       </div>
 
       <div className="flex-1 ml-80 p-8">
@@ -100,7 +107,7 @@ export default function Dashboard() {
             </div>
             <button 
               onClick={() => dispatch(setCreateRoomDialogOpen())}
-              className="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-lg shadow-sm transition-colors"
+              className="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-sm transition-colors"
             >
               <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -115,7 +122,7 @@ export default function Dashboard() {
               placeholder="Search rooms..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+              className="w-full pl-10 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none"
             />
             <svg className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -135,7 +142,7 @@ export default function Dashboard() {
             >
               <div className="mb-4">
                 <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mb-3">
-                  <div className="w-4 h-4 bg-purple-600 rounded-full"></div>
+                  <div className="w-4 h-4 bg-indigo-600 rounded-full"></div>
                 </div>
               </div>
               
