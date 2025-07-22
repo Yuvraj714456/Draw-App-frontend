@@ -16,7 +16,6 @@ const Dashboard = lazy(()=>import('./pages/Dashboard'))
 
 const App = () => {
   const {user,loader} = useSelector(state=>state.auth);
-
   const [getProfile] = useGetProfileMutation();
   const dispatch = useDispatch();
 
@@ -24,8 +23,9 @@ const App = () => {
     const getData= async ()=>{
       try {
         const res = await getProfile();
-        if(res?.success){
-          dispatch(userExists(res.user));
+        if(res.data){
+          console.log(res)
+          dispatch(userExists(res.data.user));
         }else{
           dispatch(userNotExists());
         }
