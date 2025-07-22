@@ -35,6 +35,22 @@ const api = createApi({
             }),
             invalidatesTags:["Room"]
         }),
+        getUserDetails:builder.mutation({
+            query:()=>({
+                url:"userdetails",
+                method:"GET",
+                credentials:'include',
+            }),
+            invalidatesTags:["User"]
+        }),
+        getProfile:builder.mutation({
+            query:()=>({
+                url:'me',
+                method:"GET",
+                credentials:"include",
+            }),
+            invalidatesTags:["User"]
+        })
     })
 })
 
@@ -44,4 +60,6 @@ export const {
     useUserLoginMutation,
     useRegisterUserMutation,
     useCreateRoomMutation,
+    useGetUserDetailsMutation,
+    useGetProfileMutation
 } = api

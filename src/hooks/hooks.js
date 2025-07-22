@@ -1,8 +1,5 @@
 import { useEffect, useState } from "react"
 import toast from 'react-hot-toast'
-import { useGetChatDetailsQuery } from "../redux/api/api";
-
-
 
 const useAsyncMutation = (mutationHook)=>{
     const [isLoading,setIsLoading] = useState(false);
@@ -52,6 +49,7 @@ const useSocketsEvents = (socket,handlers)=>{
         }
     },socket,handlers);
 }
+
 
 
 export {useAsyncMutation,useErrors,useSocketsEvents}

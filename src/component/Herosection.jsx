@@ -1,36 +1,12 @@
-import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCreateRoomDialogOpen } from "../redux/reducers/misc";
+import  CreateRoomModel  from './CreateRoomModel';
 import HeroSectionImage from "./HeroSectionImage";
-import { useAsyncMutation } from "../hooks/hooks";
-import { useCreateRoomMutation } from "../redux/api/api";
-import { useDispatch } from "react-redux";
-import { setDrawTabClose, setDrawTabOpen } from "../redux/reducers/misc";
-import { useEffect } from "react";
 
 const HeroSection = () => {
-
-  const navigate = useNavigate();
   const dispatch =  useDispatch();
-  const [startRoom,isStartRoomLoading,startRoomdata] = useAsyncMutation(useCreateRoomMutation);
+  const {createRoomDialog} = useSelector(state=>state.misc);
 
-  const handleStartDrawing =()=>{
-    const roomId = localStorage.getItem("roomId");
-    if(!roomId)
-      startRoom("Creating Drawing Setup",{slug:""});
-    else{
-       navigate(`/draw/${roomId}`);
-    }
-  }
-
-  useEffect(()=>{    
-      if(!isStartRoomLoading && startRoomdata){
-        localStorage.setItem("roomId",startRoomdata.roomData.roomId);
-        dispatch(setDrawTabOpen())
-        navigate(`/draw/${startRoomdata.roomData.roomId}`);
-      }
-        return () =>{
-          dispatch(setDrawTabClose());
-        }
-  },[startRoomdata])
   const handleCollabortaion =()=>{
 
   } 
@@ -53,15 +29,16 @@ const HeroSection = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <button 
-                onClick={handleStartDrawing}
+              <div 
+                onClick={()=>dispatch(setCreateRoomDialogOpen())}
                 className="bg-indigo-600 text-white px-8 py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-all transform hover:scale-105 shadow-lg"
               >
                 <svg className="inline w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                 </svg>
                 Start Drawing Now
-              </button>
+              </div>
+              { createRoomDialog &&  <CreateRoomModel/>}
               <button 
                 onClick={handleCollabortaion}
                 className="border border-slate-300 text-slate-700 px-8 py-4 rounded-xl font-semibold hover:bg-slate-50 transition-colors"

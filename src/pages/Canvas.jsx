@@ -1,105 +1,128 @@
 import { useEffect, useRef, useState } from 'react';
 import { BiPointer } from "react-icons/bi";
 import { FaRegCircle } from "react-icons/fa6";
-import { MdArrowOutward } from "react-icons/md";
 import { PiRectangleLight } from "react-icons/pi";
-import { useDispatch } from 'react-redux';
+import { SlPencil } from "react-icons/sl";
 import { CHAT, JOIN_ROOM, LEAVE_ROOM } from '../constant/events';
 import { initDraw } from '../Draw/Draw';
 import { useSocket } from '../socket';
 
-
-
 const CanvasComponent = () => {
-    const canvasRef=useRef(null);
+    const canvasRef = useRef(null);
     const drawInstanceRef = useRef(null);
     const getToolRef = useRef(() => "pointer");
 
     const roomId = localStorage.getItem("roomId");
     const socket = useSocket();
-    const [selectedTool,setSelectedTool] = useState("pointer");
-    const dispatch=useDispatch();
+    const [selectedTool, setSelectedTool] = useState("pointer");
+
 
     useEffect(() => {
       getToolRef.current = () => selectedTool;
     }, [selectedTool]);
 
+    useEffect(() => {
+        const canvas = canvasRef.current;
+        if (!canvas || !socket) return;
+        
+        const handleResize = () => {
+           
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            
+            
+            if (drawInstanceRef.current) {
+                drawInstanceRef.current.draw();
+            }
+        };
 
-    useEffect(()=>{
-      if(canvasRef.current){
-        socket.emit(JOIN_ROOM,roomId);
+        window.addEventListener('resize', handleResize);
+
+        socket.emit(JOIN_ROOM, roomId);
 
         initDraw(
-              canvasRef.current,
-              socket,
-              ()=>getToolRef.current,
-              setSelectedTool
-            ).then((drawer)=>
-                  drawInstanceRef.current=drawer);
+            canvas,
+            socket,
+            () => getToolRef.current,
+            setSelectedTool
+        ).then((drawer) => {
+            drawInstanceRef.current = drawer;
+            handleResize();
+        });
         
-        const onNewShape = (({content})=>{
+        const onNewShape = (({ content }) => {
             try {
-              drawInstanceRef.current.addShape(content);
+                if (drawInstanceRef.current) {
+                    drawInstanceRef.current.addShape(content);
+                }
             } catch (error) {
-              console.log("Failed to parse shape",content);
+                console.log("Failed to parse shape", content);
             }
-        })
+        });
 
-        socket.on(CHAT,onNewShape);
+        socket.on(CHAT, onNewShape);
 
-        return ()=>{
-          socket.emit(LEAVE_ROOM,roomId);
-          socket.off(CHAT,onNewShape);
-        }
-      }
-    },[canvasRef,socket]);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+            socket.emit(LEAVE_ROOM, roomId);
+            socket.off(CHAT, onNewShape);
+        };
+    }, [socket, roomId]);
 
-  
-  return (
-    <div className='relative w-screen h-screen overflow-hidden'>
-        <canvas ref={canvasRef} width={window.innerWidth} height={window.innerHeight } className='border-gray-300 z-0'/>
-          <div className="absolute top-4 left-1/2 -translate-x-1/2 flex gap-6 bg-[#232329] px-4 py-2 rounded-md z-10 text-white items-center">
+    return (
+        <div className='relative w-screen h-screen overflow-hidden  bg-[#232329]'>
+            <canvas ref={canvasRef} className='w-full h-full z-0'/>
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 flex gap-6 bg-[#232329] px-4 py-2 rounded-md z-10 text-white items-center">
                 <div
-                  onClick={() => setSelectedTool("pointer")}
-                  className={`w-10 h-10 flex items-center justify-center rounded-xl relative ${
-                    selectedTool === "pointer" ? "bg-[#6a6499]" : "hover:bg-white/10"
-                  }`}
+                    onClick={() => setSelectedTool("pointer")}
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl relative ${
+                        selectedTool === "pointer" ? "bg-[#6a6499]" : "hover:bg-white/10"
+                    }`}
                 >
-                  <BiPointer size={20} />
+                    <BiPointer size={20} />
                 </div>
 
-                {/* Rectangle Tool */}
                 <div
-                  onClick={() => setSelectedTool("rectangle")}
-                  className={`w-10 h-10 flex items-center justify-center rounded-xl relative ${
-                    selectedTool === "rectangle" ? "bg-[#6a6499]" : "hover:bg-white/10"
-                  }`}
+                    onClick={() => setSelectedTool("rectangle")}
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl relative ${
+                        selectedTool === "rectangle" ? "bg-[#6a6499]" : "hover:bg-white/10"
+                    }`}
                 >
-                  <PiRectangleLight size={20} />
+                    <PiRectangleLight size={20} />
                 </div>
 
-                {/* Circle Tool */}
                 <div
-                  onClick={() => setSelectedTool("circle")}
-                  className={`w-10 h-10 flex items-center justify-center rounded-xl relative ${
-                    selectedTool === "circle" ? "bg-[#6a6499]" : "hover:bg-white/10"
-                  }`}
+                    onClick={() => setSelectedTool("circle")}
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl relative ${
+                        selectedTool === "circle" ? "bg-[#6a6499]" : "hover:bg-white/10"
+                    }`}
                 >
-                  <FaRegCircle size={18} />
+                    <FaRegCircle size={18} />
                 </div>
+
                 <div 
                     onClick={() => setSelectedTool("line")}
                     className={`w-10 h-10 flex items-center justify-center rounded-xl relative ${
                         selectedTool === "line" ? "bg-[#6a6499]" : "hover:bg-white/10"
-                      }`}
-                    >
+                    }`}
+                >
                     <div
-                        className={`w-6 h-0.5 bg-white cursor-pointer rounded-sm ${selectedTool ? 'bg-blue-500' : 'bg-gray-500'}`}
-                      />
+                        className="w-6 h-0.5 bg-white"
+                    />
                 </div>
-          </div>
-    </div>
-  )
-}
 
-export default CanvasComponent
+                <div
+                    onClick={() => setSelectedTool("pencil")}
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl relative ${
+                        selectedTool === "pencil" ? "bg-[#6a6499]" : "hover:bg-white/10"
+                    }`}
+                >
+                    <SlPencil size={18} />
+                </div>
+            </div>
+
+        </div>
+    );
+};
+
+export default CanvasComponent;

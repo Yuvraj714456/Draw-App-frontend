@@ -1,39 +1,19 @@
-import { useEffect, useState } from 'react';
-import {useNavigate} from 'react-router-dom'
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useAsyncMutation } from '../hooks/hooks';
-import { useCreateRoomMutation } from '../redux/api/api';
-import { setDrawTabClose, setDrawTabOpen } from '../redux/reducers/misc';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const [startRoom,isStartRoomLoading,startRoomdata] = useAsyncMutation(useCreateRoomMutation);
-
-  const handleStartDrawing =()=>{
-    const roomId = localStorage.getItem("roomId");
-    if(!roomId)
-      startRoom("Creating Drawing Setup",{slug:""});
-    else{
-       navigate(`/draw/${roomId}`);
-    }
-  }
-
-  useEffect(()=>{    
-      if(!isStartRoomLoading && startRoomdata){
-        localStorage.setItem("roomId",startRoomdata.roomData.roomId);
-        dispatch(setDrawTabOpen())
-        navigate(`/draw/${startRoomdata.roomData.roomId}`);
-      }
-      return () =>{
-          dispatch(setDrawTabClose());
-      }
-  },[startRoomdata])
+  const dispatch=useDispatch();
+  const {createRoomDialog} = useSelector(state=>state.misc);
 
   const handleLogin=()=>{
     navigate('/auth');
+  }
+
+  const handleDashboard=()=>{
+    navigate('/dashboard');
   }
 
   const {user}  = useSelector(state=>state.auth);
@@ -55,15 +35,15 @@ const Navbar = () => {
             <a href="#features" className="text-slate-600 hover:text-slate-800 transition-colors">Features</a>
             <a href="#use-cases" className="text-slate-600 hover:text-slate-800 transition-colors">Use Cases</a>
             <a href="#collaboration" className="text-slate-600 hover:text-slate-800 transition-colors">Collaboration</a>
-            <button 
-              onClick={handleStartDrawing}
+            {/* <div 
               className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+              onClick={()=>dispatch(setCreateRoomDialogOpen())}
             >
               Start Drawing
-            </button>
+            </div> */}
 
             {user?<button 
-              onClick={handleLogin}
+              onClick={handleDashboard}
               className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
             >
               Dashboard
@@ -99,12 +79,12 @@ const Navbar = () => {
             <a href="#features" className="block text-slate-600">Features</a>
             <a href="#use-cases" className="block text-slate-600">Use Cases</a>
             <a href="#collaboration" className="block text-slate-600">Collaboration</a>
-            <button 
-              onClick={handleStartDrawing}
+            {/* <div 
               className="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg"
+              onClick={()=>dispatch(setCreateRoomDialogOpen())}
             >
               Start Drawing
-            </button>
+            </div> */}
             {user?
               <button onClick={handleLogin}
                 className="w-full bg-indigo-600 text-white px-4 py-2 rounded-lg">

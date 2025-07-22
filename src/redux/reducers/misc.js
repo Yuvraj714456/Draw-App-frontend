@@ -3,7 +3,8 @@ import {createSlice} from '@reduxjs/toolkit'
 const initialState = {
     isAuthTab:false,
     isDrawTab:true,
-    Shapes:[]
+    Shapes:[],
+    createRoomDialog:false,
 
 }
 
@@ -23,11 +24,11 @@ const miscSlice = createSlice({
         setDrawTabClose:(state)=>{
             state.isDrawTab=false
         },
-        setShapes:(state,action)=>{
-            state.Shapes = action.payload
+        setCreateRoomDialogOpen:(state)=>{
+            state.createRoomDialog=true
         },
-        addShape:(state,action)=>{
-              state.Shapes.push(action.payload)
+        setCreateRoomDialogClose:(state)=>{
+            state.createRoomDialog=false
         }
     }
 })
@@ -39,6 +40,6 @@ export const {
     setAuthTabOpen,
     setDrawTabClose,
     setDrawTabOpen,
-    setShapes,
-    addShape,
+    setCreateRoomDialogClose,
+    setCreateRoomDialogOpen,
 } = miscSlice.actions
