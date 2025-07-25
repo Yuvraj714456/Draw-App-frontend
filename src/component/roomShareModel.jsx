@@ -22,7 +22,7 @@ const ShareModal = ({setShareModal,roomId}) => {
     return (
         // Modal Overlay
         <div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm "
             onClick={onClose} // Close modal when clicking the overlay
         >
             {/* Modal Content */}
@@ -53,10 +53,10 @@ const ShareModal = ({setShareModal,roomId}) => {
                     />
                     <button
                         onClick={handleCopy}
-                        className={`px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center transition-all duration-200 ${
+                        className={`px-4 py-2 rounded-md text-sm font-semibold flex items-center justify-center transition-all duration-200  ${
                             isCopied 
-                            ? 'bg-green-600' 
-                            : 'bg-[#6a6499] hover:bg-[#5a5489]'
+                            ? 'bg-green-600 cursor-not-allowed' 
+                            : 'bg-[#6a6499] hover:bg-[#5a5489] cursor-pointer'
                         }`}
                     >
                         {/* MODIFIED: Replaced Copy with IoCopyOutline */}

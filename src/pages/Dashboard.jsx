@@ -4,6 +4,8 @@ import CreateRoomModel from "../component/CreateRoomModel";
 import { useAsyncMutation } from "../hooks/hooks";
 import { useGetUserDetailsMutation } from "../redux/api/api";
 import { setCreateRoomDialogOpen } from "../redux/reducers/misc";
+import { useNavigate } from "react-router-dom";
+import { DashboardShimmer } from "../component/loader";
 
 export default function Dashboard() {
   const [userDetails,setUserDetails] = useState(null);
@@ -11,6 +13,7 @@ export default function Dashboard() {
   const [searchQuery, setSearchQuery] = useState("");
   const {createRoomDialog} = useSelector(state=>state.misc);
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const [getUserDetails,isLoading,data] = useAsyncMutation(useGetUserDetailsMutation);
   let filteredRooms=[];
   let thisMonthRoom=0;
@@ -30,10 +33,11 @@ export default function Dashboard() {
         filteredRooms = roomDetaills.filter(room =>(
           room.slug?.toLowerCase().includes(searchQuery.toLowerCase()) ||
           room.description?.toLowerCase().includes(searchQuery.toLowerCase())
+          
         )
       );
       const currentDate = new Date();
-      const currentMonth = currentDate.getMonth(); // 0-indexed: Jan = 0
+      const currentMonth = currentDate.getMonth(); 
       const currentYear = currentDate.getFullYear();
 
       thisMonthRoom = userDetails?.rooms?.filter(room => {
@@ -48,6 +52,8 @@ export default function Dashboard() {
   const handleLogout =()=>{
           console.log("logout");
   }
+
+  console.log(roomDetaills);
 
   return !isLoading && userDetails? (
     <div className="min-h-screen flex bg-gray-50">
@@ -131,14 +137,15 @@ export default function Dashboard() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredRooms.map((room,index) => (
+          {filteredRooms.map((room) => (
             <div 
-              key={index} 
+              key={room._id} 
               className="bg-white rounded-lg p-6 border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer"
               style={{ 
                 minHeight: '180px',
-                boxShadow: index % 2 === 0 ? '0 2px 4px rgba(0,0,0,0.1)' : '0 4px 8px rgba(0,0,0,0.08)'
+                boxShadow: room._id % 2 === 0 ? '0 2px 4px rgba(0,0,0,0.1)' : '0 4px 8px rgba(0,0,0,0.08)'
               }}
+              onClick = {()=>navigate(`/draw/${room._id}`)}
             >
               <div className="mb-4">
                 <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mb-3">
@@ -179,5 +186,5 @@ export default function Dashboard() {
             <CreateRoomModel />
       }
     </div>
-  ):<div>Loading...</div>;
+  ):<DashboardShimmer/>;
 }

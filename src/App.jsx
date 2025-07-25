@@ -7,6 +7,7 @@ import { useAsyncMutation } from './hooks/hooks';
 import { useGetProfileMutation } from './redux/api/api';
 import { userExists, userNotExists } from './redux/reducers/auth';
 import { useDispatch, useSelector } from 'react-redux';
+import { HomePageShimmer } from './component/loader';
 
 const Home = lazy(()=>import('./pages/Home'));
 const Login = lazy(()=>import('./pages/Login'));
@@ -38,9 +39,8 @@ const App = () => {
 
   console.log(user);
 
-  return loader ? <div>Loading...</div> :  (
+  return loader ? <HomePageShimmer/> :  (
     <BrowserRouter >
-      <Suspense fallback={<div>Loading...</div>}>
         <Routes>
           <Route path='/' element={<Home/>}/>
           <Route path='/auth' element={<Login/>}/>
@@ -54,7 +54,6 @@ const App = () => {
           </Route>
           <Route path='*' element={<NotFound/>}/>
         </Routes>
-      </Suspense>
       <Toaster position='bottom-right'/>
     </BrowserRouter> 
   )

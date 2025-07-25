@@ -7,12 +7,14 @@ import { CHAT, JOIN_ROOM, LEAVE_ROOM } from '../constant/events';
 import { initDraw } from '../Draw/Draw';
 import { useSocket } from '../socket';
 import ShareModal from '../component/roomShareModel';
+import { useNavigate } from 'react-router-dom';
 
 const CanvasComponent = () => {
     const canvasRef = useRef(null);
     const drawInstanceRef = useRef(null);
     const getToolRef = useRef(() => "pointer");
     const [shareModal,setShareModal] = useState(false);
+    const navigate = useNavigate();
 
     const roomId = localStorage.getItem("roomId");
     const socket = useSocket();
@@ -123,9 +125,13 @@ const CanvasComponent = () => {
                 </div>
             </div>
 
-            <div className='absolute right-0 mr-20 top-6 rounded-md px-4 py-2.5 bg-[#6a6499] hover:bg-[#5a5489] text-white' onClick={()=>setShareModal(true)}>
+            <div className='absolute right-0 mr-20 top-4 rounded-md px-4 py-2.5 bg-[#6a6499] hover:bg-[#5a5489] text-white cursor-pointer' onClick={()=>setShareModal(true)}>
                 Share 
                 {shareModal &&<ShareModal setShareModal={setShareModal} roomId={roomId}/>}
+            </div>
+
+            <div className='absolute left-0 ml-20 top-4 rounded-md px-4 py-2.5 bg-[#6a6499] hover:bg-[#5a5489] text-white cursor-pointer' onClick={()=>navigate('/')}>
+                Home 
             </div>
         </div>
     );
