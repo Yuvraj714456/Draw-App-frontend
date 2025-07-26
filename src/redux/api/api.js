@@ -50,6 +50,14 @@ const api = createApi({
                 credentials:"include",
             }),
             invalidatesTags:["User"]
+        }),
+        logout:builder.mutation({
+            query:()=>({
+                url:'logout',
+                method:"GET",
+                credentials:'include',
+            }),
+            invalidatesTags:["User"]
         })
     })
 })
@@ -61,5 +69,6 @@ export const {
     useRegisterUserMutation,
     useCreateRoomMutation,
     useGetUserDetailsMutation,
-    useGetProfileMutation
+    useGetProfileMutation,
+    useLogoutMutation
 } = api

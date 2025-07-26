@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import CreateRoomModel from "../component/CreateRoomModel";
 import { useAsyncMutation } from "../hooks/hooks";
-import { useGetUserDetailsMutation } from "../redux/api/api";
+import { useGetUserDetailsMutation, useLogoutMutation } from "../redux/api/api";
 import { setCreateRoomDialogOpen } from "../redux/reducers/misc";
 import { useNavigate } from "react-router-dom";
 import { DashboardShimmer } from "../component/loader";
+import { userNotExists } from "../redux/reducers/auth";
 
 export default function Dashboard() {
   const [userDetails,setUserDetails] = useState(null);
@@ -15,6 +16,7 @@ export default function Dashboard() {
   const dispatch = useDispatch();
   const navigate=useNavigate();
   const [getUserDetails,isLoading,data] = useAsyncMutation(useGetUserDetailsMutation);
+  const [getLogout,isLoadingLogout] = useAsyncMutation(useLogoutMutation);
   let filteredRooms=[];
   let thisMonthRoom=0;
 
@@ -50,7 +52,8 @@ export default function Dashboard() {
   }
 
   const handleLogout =()=>{
-          console.log("logout");
+        getLogout();
+        dispatch(userNotExists());
   }
 
   console.log(roomDetaills);
