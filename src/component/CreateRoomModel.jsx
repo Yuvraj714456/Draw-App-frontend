@@ -20,7 +20,6 @@ const CreateRoomModel = () => {
 
     useEffect(()=>{    
         if(!isLoading && data){
-            localStorage.setItem("roomId",data.roomData.roomId);
             dispatch(setDrawTabOpen())
             navigate(`/draw/${data.roomData.roomId}`);
         }

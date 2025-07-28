@@ -7,7 +7,7 @@ import { CHAT, JOIN_ROOM, LEAVE_ROOM } from '../constant/events';
 import { initDraw } from '../Draw/Draw';
 import { useSocket } from '../socket';
 import ShareModal from '../component/roomShareModel';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const CanvasComponent = () => {
     const canvasRef = useRef(null);
@@ -15,8 +15,8 @@ const CanvasComponent = () => {
     const getToolRef = useRef(() => "pointer");
     const [shareModal,setShareModal] = useState(false);
     const navigate = useNavigate();
-
-    const roomId = localStorage.getItem("roomId");
+    const {roomId} = useParams();
+    console.log(roomId);
     const socket = useSocket();
     const [selectedTool, setSelectedTool] = useState("pointer");
 
@@ -48,7 +48,8 @@ const CanvasComponent = () => {
             canvas,
             socket,
             () => getToolRef.current,
-            setSelectedTool
+            setSelectedTool,
+            roomId
         ).then((drawer) => {
             drawInstanceRef.current = drawer;
             handleResize();

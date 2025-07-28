@@ -9,7 +9,6 @@ let socket = null;
 const useSocket = () => useContext(SocketContext);
 
 const SocketProvider = ({ children }) => {
-
    if(!socket){
     socket = io(server,{withCredentials:true});
     socket.on("connection",()=>{

@@ -24,8 +24,7 @@ const toWorld = (x, y, panX, panY, zoom) => ({
 
 
 
-export const initDraw = async (canvas, socket, getSelectedTool, setSelectedTool) => {
-    const roomId = localStorage.getItem("roomId");
+export const initDraw = async (canvas, socket, getSelectedTool, setSelectedTool,roomId) => {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
